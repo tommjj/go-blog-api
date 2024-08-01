@@ -19,7 +19,7 @@ var logLevelMap = map[string]zapcore.Level{
 	"Fatal":  zap.FatalLevel,
 }
 
-var L *zap.Logger
+var L *zap.Logger = zap.NewExample()
 
 func Set(conf config.Logger) error {
 	level, ok := logLevelMap[conf.Level]
@@ -45,12 +45,35 @@ func Set(conf config.Logger) error {
 		zapcore.NewJSONEncoder(encoder),
 		zapcore.NewMultiWriteSyncer(
 			zapcore.AddSync(w),
-			zapcore.AddSync(os.Stderr),
+			zapcore.AddSync(os.Stdout),
 		),
 		level,
 	)
 
 	L = zap.New(core)
-
 	return nil
+}
+
+func Debug(msg string, fields ...zapcore.Field) {
+	L.Debug(msg, fields...)
+}
+
+func Info(msg string, fields ...zapcore.Field) {
+	L.Info(msg, fields...)
+}
+
+func Warn(msg string, fields ...zapcore.Field) {
+	L.Warn(msg, fields...)
+}
+
+func DPanic(msg string, fields ...zapcore.Field) {
+	L.DPanic(msg, fields...)
+}
+
+func Panic(msg string, fields ...zapcore.Field) {
+	L.Panic(msg, fields...)
+}
+
+func Fatal(msg string, fields ...zapcore.Field) {
+	L.Fatal(msg, fields...)
 }

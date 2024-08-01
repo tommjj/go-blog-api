@@ -13,10 +13,12 @@ func main() {
 		log.Fatalf("load config error ::%v", err)
 	}
 
+	// setup logger
 	err = logger.Set(*config.Logger)
 	if err != nil {
 		log.Fatalf("set logger err ::%v", err)
 	}
+	defer logger.L.Sync()
 
-	logger.L.Info("setup done!")
+	logger.Info("setup done!")
 }
