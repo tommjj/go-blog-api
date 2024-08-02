@@ -1,3 +1,3 @@
 # go-blog-api
 
-A simple RESTful blog web sevice
+A simple RESTful blog web service

@@ -11,6 +11,7 @@ type (
 	Config struct {
 		App    *App
 		Logger *Logger
+		DB     *DB
 	}
 
 	App struct {
@@ -25,6 +26,10 @@ type (
 		MaxSize    int
 		MaxBackups int
 		MaxAge     int
+	}
+
+	DB struct {
+		FileName string
 	}
 )
 
@@ -61,8 +66,13 @@ func New() (*Config, error) {
 		MaxAge:     maxAge,
 	}
 
+	db := &DB{
+		FileName: os.Getenv("DB_FILE_NAME"),
+	}
+
 	return &Config{
 		App:    app,
 		Logger: logger,
+		DB:     db,
 	}, nil
 }
