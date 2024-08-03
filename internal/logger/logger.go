@@ -66,6 +66,10 @@ func Warn(msg string, fields ...zapcore.Field) {
 	L.Warn(msg, fields...)
 }
 
+func Error(msg string, fields ...zapcore.Field) {
+	L.Error(msg, fields...)
+}
+
 func DPanic(msg string, fields ...zapcore.Field) {
 	L.DPanic(msg, fields...)
 }

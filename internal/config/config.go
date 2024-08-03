@@ -12,6 +12,7 @@ type (
 		App    *App
 		Logger *Logger
 		DB     *DB
+		Auth   *Auth
 	}
 
 	App struct {
@@ -30,6 +31,11 @@ type (
 
 	DB struct {
 		FileName string
+	}
+
+	Auth struct {
+		SecretKey string
+		Duration  string
 	}
 )
 
@@ -70,9 +76,15 @@ func New() (*Config, error) {
 		FileName: os.Getenv("DB_FILE_NAME"),
 	}
 
+	auth := &Auth{
+		SecretKey: os.Getenv("AUTH_SECRET"),
+		Duration:  os.Getenv("AUTH_TOKEN_DURATION"),
+	}
+
 	return &Config{
 		App:    app,
 		Logger: logger,
 		DB:     db,
+		Auth:   auth,
 	}, nil
 }
