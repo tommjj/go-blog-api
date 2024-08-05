@@ -20,7 +20,7 @@ type Blog struct {
 	Title     string    `gorm:"not null;index"`
 	Text      string    `gorm:"not null"`
 	AuthorID  uuid.UUID `gorm:"not null"`
-	Author    User      `gorm:"foreignKey:AuthorID"`
+	Author    User      `gorm:"foreignKey:AuthorID;constraint:OnDelete:CASCADE"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

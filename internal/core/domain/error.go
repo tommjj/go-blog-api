@@ -15,8 +15,6 @@ var (
 	ErrConflictingData = errors.New("data conflicts with existing data in unique column")
 	// ErrInsufficientStock is an error for when product stock is not enough
 	ErrInsufficientStock = errors.New("product stock is not enough")
-	// ErrInsufficientPayment is an error for when total paid is less than total price
-	ErrInsufficientPayment = errors.New("total paid is less than total price")
 	// ErrTokenDuration is an error for when the token duration format is invalid
 	ErrTokenDuration = errors.New("invalid token duration format")
 	// ErrTokenCreation is an error for when the token creation fails
@@ -26,7 +24,7 @@ var (
 	// ErrInvalidToken is an error for when the access token is invalid
 	ErrInvalidToken = errors.New("access token is invalid")
 	// ErrInvalidCredentials is an error for when the credentials are invalid
-	ErrInvalidCredentials = errors.New("invalid email or password")
+	ErrInvalidCredentials = errors.New("invalid username or password")
 	// ErrEmptyAuthorizationHeader is an error for when the authorization header is empty
 	ErrEmptyAuthorizationHeader = errors.New("authorization header is not provided")
 	// ErrInvalidAuthorizationHeader is an error for when the authorization header is invalid

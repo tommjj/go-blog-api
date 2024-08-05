@@ -30,15 +30,17 @@ func NewJWTTokenService(conf config.Auth) (*JWTService, error) {
 		return nil, err
 	}
 
-	return &JWTService{
-		key: []byte(conf.SecretKey),
-		keyFunc: func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, domain.ErrInvalidToken
-			}
+	keyFunc := func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, domain.ErrInvalidToken
+		}
 
-			return []byte(conf.SecretKey), nil
-		},
+		return []byte(conf.SecretKey), nil
+	}
+
+	return &JWTService{
+		key:      []byte(conf.SecretKey),
+		keyFunc:  keyFunc,
 		duration: duration,
 	}, nil
 }

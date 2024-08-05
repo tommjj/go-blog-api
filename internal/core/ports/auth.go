@@ -6,11 +6,11 @@ import (
 	"github.com/tommjj/go-blog-api/internal/core/domain"
 )
 
-type AuthService interface {
+type IAuthService interface {
 	Login(ctx context.Context, email, password string) (string, error)
 }
 
-type TokenService interface {
+type ITokenService interface {
 	CreateToken(user *domain.User) (string, error)
 
 	VerifyToken(token string) (*domain.TokenPayload, error)
