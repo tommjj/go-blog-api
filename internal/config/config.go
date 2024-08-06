@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -13,6 +14,7 @@ type (
 		Logger *Logger
 		DB     *DB
 		Auth   *Auth
+		Http   *Http
 	}
 
 	App struct {
@@ -21,9 +23,13 @@ type (
 	}
 
 	Logger struct {
-		Level      string
+		Level         string
+		Encoder       string
+		LogFileWriter *LogFileWriter
+	}
+
+	LogFileWriter struct {
 		FileName   string
-		Encoder    string
 		MaxSize    int
 		MaxBackups int
 		MaxAge     int
@@ -37,6 +43,13 @@ type (
 		SecretKey string
 		Duration  string
 	}
+
+	Http struct {
+		AllowedOrigins []string
+		URL            string
+		Port           int
+		Logger         Logger
+	}
 )
 
 func New() (*Config, error) {
@@ -45,9 +58,45 @@ func New() (*Config, error) {
 		return nil, err
 	}
 
-	app := &App{
+	app := GetAppConf()
+
+	logger, err := GetLoggerConf()
+	if err != nil {
+		return nil, err
+	}
+
+	db := GetDBConf()
+
+	auth := GetAuthConf()
+
+	http, err := GetHTTPConf()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Config{
+		App:    app,
+		Logger: logger,
+		DB:     db,
+		Auth:   auth,
+		Http:   http,
+	}, nil
+}
+
+func GetAppConf() *App {
+	return &App{
 		Name: os.Getenv("APP_NAME"),
 		Env:  os.Getenv("APP_ENV"),
+	}
+}
+
+func GetLoggerConf() (*Logger, error) {
+	if os.Getenv("LOG_ENABLE_FILE_WRITER") != "true" {
+		return &Logger{
+			Level:         os.Getenv("LOG_LEVEL"),
+			Encoder:       os.Getenv("LOG_ENCODER"),
+			LogFileWriter: nil,
+		}, nil
 	}
 
 	maxSize, err := strconv.Atoi(os.Getenv("LOG_MAX_SIZE"))
@@ -63,28 +112,70 @@ func New() (*Config, error) {
 		return nil, err
 	}
 
-	logger := &Logger{
-		Level:      os.Getenv("LOG_LEVEL"),
-		FileName:   os.Getenv("LOG_FILE"),
-		Encoder:    os.Getenv("LOG_ENCODER"),
-		MaxSize:    maxSize,
-		MaxBackups: maxBackups,
-		MaxAge:     maxAge,
-	}
+	return &Logger{
+		Level:   os.Getenv("LOG_LEVEL"),
+		Encoder: os.Getenv("LOG_ENCODER"),
+		LogFileWriter: &LogFileWriter{
+			FileName:   os.Getenv("LOG_FILE"),
+			MaxSize:    maxSize,
+			MaxBackups: maxBackups,
+			MaxAge:     maxAge,
+		},
+	}, nil
+}
 
-	db := &DB{
+func GetDBConf() *DB {
+	return &DB{
 		FileName: os.Getenv("DB_FILE_NAME"),
 	}
+}
 
-	auth := &Auth{
+func GetAuthConf() *Auth {
+	return &Auth{
 		SecretKey: os.Getenv("AUTH_SECRET"),
 		Duration:  os.Getenv("AUTH_TOKEN_DURATION"),
 	}
+}
 
-	return &Config{
-		App:    app,
-		Logger: logger,
-		DB:     db,
-		Auth:   auth,
+func GetHTTPConf() (*Http, error) {
+	allowedOrigins := strings.Split(os.Getenv("HTTP_ALLOWED_ORIGINS"), ",")
+	port, err := strconv.Atoi(os.Getenv("HTTP_PORT"))
+	if err != nil {
+		return nil, err
+	}
+
+	logger := Logger{
+		Level:         os.Getenv("HTTP_LOG_LEVEL"),
+		Encoder:       os.Getenv("HTTP_LOG_ENCODER"),
+		LogFileWriter: nil,
+	}
+
+	if os.Getenv("HTTP_LOG_ENABLE_FILE_WRITER") == "true" {
+		maxSize, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_SIZE"))
+		if err != nil {
+			return nil, err
+		}
+		maxBackups, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_BACKUPS"))
+		if err != nil {
+			return nil, err
+		}
+		maxAge, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_AGE"))
+		if err != nil {
+			return nil, err
+		}
+
+		logger.LogFileWriter = &LogFileWriter{
+			FileName:   os.Getenv("HTTP_LOG_FILE"),
+			MaxSize:    maxSize,
+			MaxBackups: maxBackups,
+			MaxAge:     maxAge,
+		}
+	}
+
+	return &Http{
+		AllowedOrigins: allowedOrigins,
+		URL:            os.Getenv("HTTP_URL"),
+		Port:           port,
+		Logger:         logger,
 	}, nil
 }

@@ -56,7 +56,7 @@ func (ur *UserRepository) GetUserByName(ctx context.Context, name string) (*doma
 
 // only update non-zero fields by default
 func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
-	userData := schema.User{
+	updatedUser := schema.User{
 		ID:       user.ID,
 		Name:     user.Name,
 		Password: user.Password,
@@ -64,7 +64,7 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (*d
 
 	newUserData := &schema.User{}
 
-	upd := ur.db.WithContext(ctx).Clauses(clause.Returning{}).Model(newUserData).Where("id = ?", user.ID).Updates(userData)
+	upd := ur.db.WithContext(ctx).Clauses(clause.Returning{}).Model(newUserData).Where("id = ?", user.ID).Updates(updatedUser)
 
 	if err := upd.Error; err != nil {
 		return nil, err
@@ -83,9 +83,10 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (*d
 }
 
 func (ur *UserRepository) UpdateUserByMap(ctx context.Context, id uuid.UUID, data *map[string]interface{}) (*domain.User, error) {
-	newUserData := &schema.User{}
+	updatedUser := &schema.User{}
 
-	upd := ur.db.WithContext(ctx).Clauses(clause.Returning{}).Model(newUserData).Omit("id").Where("id = ?", id).Updates(data)
+	upd := ur.db.WithContext(ctx).Clauses(clause.Returning{}).
+		Model(updatedUser).Omit("id").Where("id = ?", id).Updates(data)
 
 	if err := upd.Error; err != nil {
 		return nil, err
@@ -95,11 +96,11 @@ func (ur *UserRepository) UpdateUserByMap(ctx context.Context, id uuid.UUID, dat
 	}
 
 	return &domain.User{
-		ID:        newUserData.ID,
-		Name:      newUserData.Name,
-		Password:  newUserData.Password,
-		CreatedAt: newUserData.CreatedAt,
-		UpdatedAt: newUserData.UpdatedAt,
+		ID:        updatedUser.ID,
+		Name:      updatedUser.Name,
+		Password:  updatedUser.Password,
+		CreatedAt: updatedUser.CreatedAt,
+		UpdatedAt: updatedUser.UpdatedAt,
 	}, nil
 }
 

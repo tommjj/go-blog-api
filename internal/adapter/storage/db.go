@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"sync"
 
 	"github.com/google/uuid"
 	sqliteGo "github.com/mattn/go-sqlite3"
@@ -11,14 +12,16 @@ import (
 	"gorm.io/gorm"
 )
 
-const CustomDriverName = "sqlite3_extended"
+const customDriverName = "sqlite3_extended"
+
+var one = sync.Once{}
 
 type DB struct {
 	*gorm.DB
 }
 
 func setSqliteCustomDriver() {
-	sql.Register(CustomDriverName,
+	sql.Register(customDriverName,
 		&sqliteGo.SQLiteDriver{
 			ConnectHook: func(conn *sqliteGo.SQLiteConn) error {
 				err := conn.RegisterFunc(
@@ -35,15 +38,17 @@ func setSqliteCustomDriver() {
 }
 
 func New(conf config.DB) (*DB, error) {
-	setSqliteCustomDriver()
+	one.Do(
+		setSqliteCustomDriver,
+	)
 
-	conn, err := sql.Open(CustomDriverName, conf.FileName)
+	conn, err := sql.Open(customDriverName, conf.FileName)
 	if err != nil {
 		return nil, err
 	}
 
 	db, err := gorm.Open(sqlite.Dialector{
-		DriverName: CustomDriverName,
+		DriverName: customDriverName,
 		DSN:        conf.FileName,
 		Conn:       conn,
 	}, &gorm.Config{
