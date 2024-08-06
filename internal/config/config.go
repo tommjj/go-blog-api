@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -101,15 +102,15 @@ func GetLoggerConf() (*Logger, error) {
 
 	maxSize, err := strconv.Atoi(os.Getenv("LOG_MAX_SIZE"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("LOG_MAX_SIZE must to be a number: %v", err)
 	}
 	maxBackups, err := strconv.Atoi(os.Getenv("LOG_MAX_BACKUPS"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("LOG_MAX_BACKUPS must to be a number: %v", err)
 	}
 	maxAge, err := strconv.Atoi(os.Getenv("LOG_MAX_AGE"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("LOG_MAX_AGE must to be a number: %v", err)
 	}
 
 	return &Logger{
@@ -141,7 +142,7 @@ func GetHTTPConf() (*Http, error) {
 	allowedOrigins := strings.Split(os.Getenv("HTTP_ALLOWED_ORIGINS"), ",")
 	port, err := strconv.Atoi(os.Getenv("HTTP_PORT"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("HTTP_PORT must to be a number: %v", err)
 	}
 
 	logger := Logger{
@@ -153,15 +154,15 @@ func GetHTTPConf() (*Http, error) {
 	if os.Getenv("HTTP_LOG_ENABLE_FILE_WRITER") == "true" {
 		maxSize, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_SIZE"))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("HTTP_LOG_MAX_SIZE must to be a number: %v", err)
 		}
 		maxBackups, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_BACKUPS"))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("HTTP_LOG_MAX_BACKUPS must to be a number: %v", err)
 		}
 		maxAge, err := strconv.Atoi(os.Getenv("HTTP_LOG_MAX_AGE"))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("HTTP_LOG_MAX_AGE must to be a number: %v", err)
 		}
 
 		logger.LogFileWriter = &LogFileWriter{
