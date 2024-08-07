@@ -54,6 +54,25 @@ func (ur *UserRepository) GetUserByName(ctx context.Context, name string) (*doma
 	}, nil
 }
 
+func (ur *UserRepository) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+	createdUser := &schema.User{
+		Name:     user.Name,
+		Password: user.Password,
+	}
+
+	if err := ur.db.WithContext(ctx).Create(createdUser).Error; err != nil {
+		return nil, err
+	}
+
+	return &domain.User{
+		ID:        createdUser.ID,
+		Name:      createdUser.Name,
+		Password:  createdUser.Password,
+		CreatedAt: createdUser.CreatedAt,
+		UpdatedAt: createdUser.UpdatedAt,
+	}, nil
+}
+
 // only update non-zero fields by default
 func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
 	updatedUser := schema.User{
@@ -112,10 +131,18 @@ func (ur *UserRepository) DeleteUser(ctx context.Context, id uuid.UUID) error {
 		tx.Rollback()
 		return err
 	}
-	if err := tx.Delete(&schema.User{}, id).Error; err != nil {
+
+	d := tx.Delete(&schema.User{}, id)
+
+	if err := d.Error; err != nil {
 		tx.Rollback()
 		return err
 	}
+	if d.RowsAffected == 0 {
+		tx.Rollback()
+		return domain.ErrNoUpdatedData
+	}
+
 	tx.Commit()
 	return nil
 }

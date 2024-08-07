@@ -11,6 +11,8 @@ var (
 	ErrDataNotFound = errors.New("data not found")
 	// ErrNoUpdatedData is an error for when no data is provided to update
 	ErrNoUpdatedData = errors.New("no data to update")
+	// ErrDataConflict is an error for data conflict
+	ErrDataConflict = errors.New("data conflict error")
 	// ErrConflictingData is an error for when data conflicts with existing data
 	ErrConflictingData = errors.New("data conflicts with existing data in unique column")
 	// ErrInsufficientStock is an error for when product stock is not enough

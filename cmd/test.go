@@ -7,7 +7,6 @@ import (
 	"github.com/tommjj/go-blog-api/internal/adapter/storage"
 	"github.com/tommjj/go-blog-api/internal/adapter/storage/repository"
 	"github.com/tommjj/go-blog-api/internal/config"
-	"github.com/tommjj/go-blog-api/internal/core/util"
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
 
@@ -25,21 +24,13 @@ func main() {
 	err = logger.Set(*config.Logger)
 	fatalIfErr(err)
 
-	defer logger.L.Sync()
+	defer logger.Sync()
 
 	db, err := storage.New(*config.DB)
 	fatalIfErr(err)
 
-	userSv := repository.NewUserRepository(db)
+	rp := repository.NewBlogRepository(db)
 
-	hashed, err := util.HashPassword("password")
-	fatalIfErr(err)
-
-	_, err = userSv.UpdateUserByMap(context.TODO(),
-		uuid.MustParse("639f68d9-438b-4e96-a27f-17e9aabd152c"),
-		&map[string]interface{}{
-			"name":     "Mostima",
-			"password": hashed,
-		})
+	err = rp.DeleteBlog(context.TODO(), uuid.MustParse("f68d7e4f-ce94-4346-adec-9b8c7363f93a"))
 	fatalIfErr(err)
 }
