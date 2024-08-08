@@ -41,7 +41,9 @@ func (br *BlogRepository) GetBlogByID(ctx context.Context, id uuid.UUID) (*domai
 func (br *BlogRepository) GetBlogsByAuthorID(ctx context.Context, id uuid.UUID, skip, limit int) ([]domain.Blog, error) {
 	blogs := []schema.Blog{}
 
-	if err := br.db.WithContext(ctx).Where("author_id = ?", id).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error; err != nil {
+	if err := br.db.WithContext(ctx).Select(
+		"id", "title", "author_id", "created_at", "updated_at",
+	).Where("author_id = ?", id).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error; err != nil {
 		return nil, err
 	}
 
@@ -66,7 +68,11 @@ func (br *BlogRepository) GetBlogsByAuthorID(ctx context.Context, id uuid.UUID, 
 func (br *BlogRepository) SearchBlogsByName(ctx context.Context, name string, skip, limit int) ([]domain.Blog, error) {
 	blogs := []schema.Blog{}
 
-	if err := br.db.WithContext(ctx).Where("title LIKE ?", fmt.Sprintf("%%%v%%", name)).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error; err != nil {
+	err := br.db.WithContext(ctx).Select(
+		"id", "title", "author_id", "created_at", "updated_at",
+	).Where("title LIKE ?", fmt.Sprintf("%%%v%%", name)).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error
+
+	if err != nil {
 		return nil, err
 	}
 

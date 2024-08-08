@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type CacheRepository interface {
+type ICacheRepository interface {
 	// Set stores the value in the cache
 	Set(ctx context.Context, key string, value []byte, ttl time.Duration)
 	// Set stores the value in the cache with NX mode

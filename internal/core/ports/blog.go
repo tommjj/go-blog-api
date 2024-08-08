@@ -10,9 +10,9 @@ import (
 type IBlogRepository interface {
 	// GetBlogByID select a blog by id
 	GetBlogByID(ctx context.Context, id uuid.UUID) (*domain.Blog, error)
-	// GetBlogsByAuthorID select blogs by author id
+	// GetBlogsByAuthorID select blogs by author id, with out blog text
 	GetBlogsByAuthorID(ctx context.Context, id uuid.UUID, skip, limit int) ([]domain.Blog, error)
-	// SearchBlogsByName search blogs by name
+	// SearchBlogsByName search blogs by name, with out blog text
 	SearchBlogsByName(ctx context.Context, name string, skip, limit int) ([]domain.Blog, error)
 	// CreateBlog insert an new blog into the database
 	CreateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
