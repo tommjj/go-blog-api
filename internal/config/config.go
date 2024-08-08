@@ -16,6 +16,7 @@ type (
 		DB     *DB
 		Auth   *Auth
 		Http   *Http
+		Redis  *Redis
 	}
 
 	App struct {
@@ -51,6 +52,11 @@ type (
 		Port           int
 		Logger         Logger
 	}
+
+	Redis struct {
+		Addr     string
+		Password string
+	}
 )
 
 func New() (*Config, error) {
@@ -75,12 +81,15 @@ func New() (*Config, error) {
 		return nil, err
 	}
 
+	redis := GetRedisConf()
+
 	return &Config{
 		App:    app,
 		Logger: logger,
 		DB:     db,
 		Auth:   auth,
 		Http:   http,
+		Redis:  redis,
 	}, nil
 }
 
@@ -179,4 +188,11 @@ func GetHTTPConf() (*Http, error) {
 		Port:           port,
 		Logger:         logger,
 	}, nil
+}
+
+func GetRedisConf() *Redis {
+	return &Redis{
+		Addr:     os.Getenv("REDIS_ADDR"),
+		Password: os.Getenv("REDIS_PASS"),
+	}
 }

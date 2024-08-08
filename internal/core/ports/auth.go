@@ -11,6 +11,8 @@ type IAuthService interface {
 }
 
 type ITokenService interface {
+	// CreateToken create an new token
 	CreateToken(user *domain.User) (string, error)
+	// VerifyToken verify string token
 	VerifyToken(token string) (*domain.TokenPayload, error)
 }

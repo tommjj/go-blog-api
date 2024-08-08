@@ -20,10 +20,10 @@ func NewUserRepository(db *storage.DB) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error) {
+func (ur *UserRepository) GetUserByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	user := &schema.User{}
 
-	err := ur.db.WithContext(ctx).Where("id = ?", userID).First(user).Error
+	err := ur.db.WithContext(ctx).Where("id = ?", id).First(user).Error
 	if err != nil {
 		return nil, domain.ErrDataNotFound
 	}
