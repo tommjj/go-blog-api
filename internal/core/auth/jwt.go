@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/tommjj/go-blog-api/internal/config"
 	"github.com/tommjj/go-blog-api/internal/core/domain"
+	"github.com/tommjj/go-blog-api/internal/core/ports"
 )
 
 var jwtMethod *jwt.SigningMethodHMAC = jwt.SigningMethodHS256
@@ -24,7 +25,7 @@ type JWTService struct {
 	duration time.Duration
 }
 
-func NewJWTTokenService(conf config.Auth) (*JWTService, error) {
+func NewJWTTokenService(conf config.Auth) (ports.ITokenService, error) {
 	duration, err := time.ParseDuration(conf.Duration)
 	if err != nil {
 		return nil, err
