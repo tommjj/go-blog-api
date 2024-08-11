@@ -7,7 +7,7 @@ import (
 
 type ICacheRepository interface {
 	// Set stores the value in the cache
-	Set(ctx context.Context, key string, value []byte, ttl time.Duration)
+	Set(ctx context.Context, key string, value []byte, ttl time.Duration) error
 	// Set stores the value in the cache with NX mode
 	SetNX(ctx context.Context, key string, value []byte, ttl time.Duration) error
 	// Get retrieves the value from the cache

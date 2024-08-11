@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/tommjj/go-blog-api/internal/adapter/storage"
-	"github.com/tommjj/go-blog-api/internal/adapter/storage/repository"
+	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite"
+	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite/repository"
 	"github.com/tommjj/go-blog-api/internal/config"
+	"github.com/tommjj/go-blog-api/internal/core/ports"
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
 
@@ -23,14 +25,15 @@ func main() {
 	// setup logger
 	err = logger.Set(*config.Logger)
 	fatalIfErr(err)
-
 	defer logger.Sync()
 
-	db, err := storage.New(*config.DB)
+	db, err := sqlite.New(*config.DB)
 	fatalIfErr(err)
 
-	rp := repository.NewBlogRepository(db)
+	var repo ports.IBlogRepository = repository.NewBlogRepository(db)
 
-	err = rp.DeleteBlog(context.TODO(), uuid.MustParse("f68d7e4f-ce94-4346-adec-9b8c7363f93a"))
+	blog, err := repo.GetBlogsByAuthorID(context.TODO(), uuid.MustParse("539f68d9-438b-4e96-a27f-17e9aabd152c"), 1, 10)
 	fatalIfErr(err)
+
+	fmt.Println(blog)
 }

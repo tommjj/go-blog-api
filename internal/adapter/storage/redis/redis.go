@@ -6,13 +6,14 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/tommjj/go-blog-api/internal/config"
+	"github.com/tommjj/go-blog-api/internal/core/ports"
 )
 
 type Redis struct {
 	client *redis.Client
 }
 
-func New(ctx context.Context, conf config.Redis) (*Redis, error) {
+func New(ctx context.Context, conf config.Redis) (ports.ICacheRepository, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     conf.Addr,
 		Password: conf.Password,

@@ -5,17 +5,18 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/tommjj/go-blog-api/internal/adapter/storage"
-	"github.com/tommjj/go-blog-api/internal/adapter/storage/schema"
+	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite"
+	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite/schema"
 	"github.com/tommjj/go-blog-api/internal/core/domain"
+	"github.com/tommjj/go-blog-api/internal/core/ports"
 	"gorm.io/gorm/clause"
 )
 
 type BlogRepository struct {
-	db *storage.DB
+	db *sqlite.DB
 }
 
-func NewBlogRepository(db *storage.DB) *BlogRepository {
+func NewBlogRepository(db *sqlite.DB) ports.IBlogRepository {
 	return &BlogRepository{
 		db: db,
 	}

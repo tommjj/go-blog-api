@@ -1,4 +1,4 @@
-package storage
+package sqlite
 
 import (
 	"database/sql"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	sqliteGo "github.com/mattn/go-sqlite3"
-	"github.com/tommjj/go-blog-api/internal/adapter/storage/schema"
+	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite/schema"
 	"github.com/tommjj/go-blog-api/internal/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

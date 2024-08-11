@@ -1,4 +1,4 @@
-package storage
+package sqlite
 
 import "gorm.io/gorm"
 
