@@ -21,3 +21,14 @@ type IUserRepository interface {
 	// DeleteUser delete a user
 	DeleteUser(ctx context.Context, id uuid.UUID) error
 }
+
+type IUserCacheService interface {
+	// SetUser set an new user to cache
+	SetUser(ctx context.Context, user *domain.User) error
+	// GetUser get a user in cache by user id
+	GetUser(ctx context.Context, id uuid.UUID) (*domain.User, error)
+	// DeleteUser delete a user in cache
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+	// DeleteAllUsers delete all users in cache
+	DeleteAllUsers(ctx context.Context) error
+}

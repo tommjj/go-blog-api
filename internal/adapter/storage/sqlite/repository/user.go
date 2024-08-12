@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// implement ports.IUserRepository
 type UserRepository struct {
 	db *sqlite.DB
 }
