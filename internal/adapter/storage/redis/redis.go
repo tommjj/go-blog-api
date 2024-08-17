@@ -2,10 +2,12 @@ package redis
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/tommjj/go-blog-api/internal/config"
+	"github.com/tommjj/go-blog-api/internal/core/domain"
 	"github.com/tommjj/go-blog-api/internal/core/ports"
 )
 
@@ -41,6 +43,9 @@ func (r *Redis) SetNX(ctx context.Context, key string, value []byte, ttl time.Du
 func (r *Redis) Get(ctx context.Context, key string) ([]byte, error) {
 	val, err := r.client.Get(ctx, key).Result()
 	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return nil, domain.ErrDataNotFound
+		}
 		return nil, err
 	}
 

@@ -7,10 +7,10 @@ import (
 )
 
 type Blog struct {
-	ID        uuid.UUID
-	Title     string
-	Text      string
-	AuthorID  uuid.UUID
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uuid.UUID `json:"id"`
+	Title     string    `json:"title"`
+	Text      string    `json:"text,omitempty"`
+	AuthorID  uuid.UUID `json:"author_id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -32,3 +32,14 @@ type IUserCacheService interface {
 	// DeleteAllUsers delete all users in cache
 	DeleteAllUsers(ctx context.Context) error
 }
+
+type IUserService interface {
+	// GetUserByID select user by user id
+	GetUserByID(ctx context.Context, id uuid.UUID) (*domain.User, error)
+	// CreateUser create an new user
+	CreateUser(ctx context.Context, username, password string) (*domain.User, error)
+	// UpdateUser update a user, only update non-zero fields
+	UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error)
+	// DeleteUser delete a user
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+}

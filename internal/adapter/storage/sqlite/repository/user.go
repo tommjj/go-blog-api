@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/tommjj/go-blog-api/internal/adapter/storage/sqlite"
@@ -63,6 +64,9 @@ func (ur *UserRepository) CreateUser(ctx context.Context, user *domain.User) (*d
 	}
 
 	if err := ur.db.WithContext(ctx).Create(createdUser).Error; err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil, domain.ErrConflictingData
+		}
 		return nil, err
 	}
 
@@ -88,6 +92,9 @@ func (ur *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (*d
 	upd := ur.db.WithContext(ctx).Clauses(clause.Returning{}).Model(newUserData).Where("id = ?", user.ID).Updates(updatedUser)
 
 	if err := upd.Error; err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil, domain.ErrConflictingData
+		}
 		return nil, err
 	}
 	if row := upd.RowsAffected; row == 0 {
@@ -110,6 +117,9 @@ func (ur *UserRepository) UpdateUserByMap(ctx context.Context, id uuid.UUID, dat
 		Model(updatedUser).Omit("id").Where("id = ?", id).Updates(data)
 
 	if err := upd.Error; err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil, domain.ErrConflictingData
+		}
 		return nil, err
 	}
 	if row := upd.RowsAffected; row == 0 {
