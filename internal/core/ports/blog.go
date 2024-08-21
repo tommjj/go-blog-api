@@ -21,3 +21,32 @@ type IBlogRepository interface {
 	// DeleteBlog delete blog by id
 	DeleteBlog(ctx context.Context, id uuid.UUID) error
 }
+
+type IBlogCacheService interface {
+	// SetBlog
+	SetBlog(ctx context.Context, blog *domain.Blog) error
+	// SetList
+	SetList(ctx context.Context, skip int, limit int, list []domain.Blog) error
+	// SetSearchList
+	SetSearchList(ctx context.Context, search string, skip int, limit int, list []domain.Blog) error
+	// GetBlog
+	GetBlog(ctx context.Context, id uuid.UUID) (*domain.Blog, error)
+	// GetList
+	GetList(ctx context.Context, skip int, limit int) ([]domain.Blog, error)
+	// GetSearchList
+	GetSearchList(ctx context.Context, search string, skip int, limit int) ([]domain.Blog, error)
+	// DeleteBlog
+	DeleteBlog(ctx context.Context, id uuid.UUID) error
+	// DeleteList
+	DeleteList(ctx context.Context, skip int, limit int) error
+	//DeleteSearchList
+	DeleteSearchList(ctx context.Context, search string, skip int, limit int) error
+	// DeleteSearchLists
+	DeleteSearchLists(ctx context.Context, search string) error
+	// DeleteAllList
+	DeleteAllList(ctx context.Context) error
+	// DeleteAllSearchList
+	DeleteAllSearchList(ctx context.Context) error
+	// DeleteAllBlogs
+	DeleteAllBlogs(ctx context.Context) error
+}

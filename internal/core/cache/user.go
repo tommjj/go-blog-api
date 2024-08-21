@@ -34,12 +34,12 @@ func (ucs *UserCacheService) SetUser(ctx context.Context, user *domain.User) err
 		return err
 	}
 
-	return ucs.cache.Set(ctx, fmt.Sprintf("%v-%v", userPrefix, user.ID), bytes, ucs.duration)
+	return ucs.cache.Set(ctx, generateCacheKeyParams(userPrefix, user.ID), bytes, ucs.duration)
 }
 
 // GetUser get a user in cache by user id
 func (ucs *UserCacheService) GetUser(ctx context.Context, id uuid.UUID) (*domain.User, error) {
-	bytes, err := ucs.cache.Get(ctx, fmt.Sprintf("%v-%v", userPrefix, id))
+	bytes, err := ucs.cache.Get(ctx, generateCacheKeyParams(userPrefix, id))
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (ucs *UserCacheService) GetUser(ctx context.Context, id uuid.UUID) (*domain
 
 // DeleteUser delete a user in cache
 func (ucs *UserCacheService) DeleteUser(ctx context.Context, id uuid.UUID) error {
-	return ucs.cache.Delete(ctx, fmt.Sprintf("%v-%v", userPrefix, id))
+	return ucs.cache.Delete(ctx, generateCacheKeyParams(userPrefix, id))
 }
 
 // DeleteAllUsers delete all users in cache

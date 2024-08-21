@@ -118,7 +118,7 @@ func (us *UserService) UpdateUser(ctx context.Context, user *domain.User) (*doma
 		logger.Error(err.Error())
 	}
 
-	us.uc.SetUser(ctx, user)
+	err = us.uc.SetUser(ctx, user)
 	if err != nil {
 		logger.Error(err.Error())
 	}
