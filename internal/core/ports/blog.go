@@ -12,8 +12,10 @@ type IBlogRepository interface {
 	GetBlogByID(ctx context.Context, id uuid.UUID) (*domain.Blog, error)
 	// GetBlogsByAuthorID select blogs by author id, with out blog text
 	GetBlogsByAuthorID(ctx context.Context, id uuid.UUID, skip, limit int) ([]domain.Blog, error)
+	// GetListBlogs get blogs
+	GetListBlogs(ctx context.Context, skip, limit int) ([]domain.Blog, error)
 	// SearchBlogsByName search blogs by name, with out blog text
-	SearchBlogsByName(ctx context.Context, name string, skip, limit int) ([]domain.Blog, error)
+	SearchBlogsByTitle(ctx context.Context, title string, skip, limit int) ([]domain.Blog, error)
 	// CreateBlog insert an new blog into the database
 	CreateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
 	// UpdateBlog update blog, only update non-zero fields by default
@@ -49,4 +51,13 @@ type IBlogCacheService interface {
 	DeleteAllSearchList(ctx context.Context) error
 	// DeleteAllBlogs
 	DeleteAllBlogs(ctx context.Context) error
+}
+
+type IBlogService interface {
+	GetBlogByID(ctx context.Context, id uuid.UUID) (*domain.Blog, error)
+	GetListBlogs(ctx context.Context, skip, limit int) ([]domain.Blog, error)
+	SearchBlogsByTitle(ctx context.Context, title string, skip, limit int) ([]domain.Blog, error)
+	CreateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
+	UpdateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
+	DeleteBlog(ctx context.Context, blogId, userId uuid.UUID) error
 }

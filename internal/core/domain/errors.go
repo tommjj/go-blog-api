@@ -15,8 +15,6 @@ var (
 	ErrDataConflict = errors.New("data conflict error")
 	// ErrConflictingData is an error for when data conflicts with existing data
 	ErrConflictingData = errors.New("data conflicts with existing data in unique column")
-	// ErrInsufficientStock is an error for when product stock is not enough
-	ErrInsufficientStock = errors.New("product stock is not enough")
 	// ErrTokenDuration is an error for when the token duration format is invalid
 	ErrTokenDuration = errors.New("invalid token duration format")
 	// ErrTokenCreation is an error for when the token creation fails
