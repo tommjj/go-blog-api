@@ -66,12 +66,41 @@ func (br *BlogRepository) GetBlogsByAuthorID(ctx context.Context, id uuid.UUID, 
 	return domainBlogs, nil
 }
 
-func (br *BlogRepository) SearchBlogsByName(ctx context.Context, name string, skip, limit int) ([]domain.Blog, error) {
+func (br *BlogRepository) GetListBlogs(ctx context.Context, skip, limit int) ([]domain.Blog, error) {
 	blogs := []schema.Blog{}
 
 	err := br.db.WithContext(ctx).Select(
 		"id", "title", "author_id", "created_at", "updated_at",
-	).Where("title LIKE ?", fmt.Sprintf("%%%v%%", name)).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error
+	).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(blogs) == 0 {
+		return nil, domain.ErrDataNotFound
+	}
+
+	domainBlogs := []domain.Blog{}
+	for _, blog := range blogs {
+		domainBlogs = append(domainBlogs, domain.Blog{
+			ID:        blog.ID,
+			Title:     blog.Title,
+			Text:      blog.Text,
+			AuthorID:  blog.AuthorID,
+			CreatedAt: blog.CreatedAt,
+			UpdatedAt: blog.UpdatedAt,
+		})
+	}
+	return domainBlogs, nil
+}
+
+func (br *BlogRepository) SearchBlogsByTitle(ctx context.Context, title string, skip, limit int) ([]domain.Blog, error) {
+	blogs := []schema.Blog{}
+
+	err := br.db.WithContext(ctx).Select(
+		"id", "title", "author_id", "created_at", "updated_at",
+	).Where("title LIKE ?", fmt.Sprintf("%%%v%%", title)).Limit(limit).Offset((skip - 1) * limit).Find(&blogs).Error
 
 	if err != nil {
 		return nil, err
@@ -122,13 +151,13 @@ func (br *BlogRepository) CreateBlog(ctx context.Context, blog *domain.Blog) (*d
 }
 
 func (br *BlogRepository) UpdateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error) {
-	newBlog := &schema.Blog{
+	updateData := &schema.Blog{
 		Title: blog.Title,
 		Text:  blog.Text,
 	}
 	updatedData := &schema.Blog{}
 
-	upd := br.db.WithContext(ctx).Clauses(clause.Returning{}).Model(updatedData).Where("id = ?", blog.ID).Updates(newBlog)
+	upd := br.db.WithContext(ctx).Clauses(clause.Returning{}).Model(updatedData).Where("id = ?", blog.ID).Updates(updateData)
 	if err := upd.Error; err != nil {
 		return nil, err
 	}

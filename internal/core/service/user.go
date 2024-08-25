@@ -45,7 +45,7 @@ func (us *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*domain.U
 	user.Password = "" // remove password
 
 	err = us.uc.SetUser(ctx, user)
-	logIfErr(err)
+	logOnError(err)
 
 	return user, nil
 }
@@ -69,7 +69,7 @@ func (us *UserService) CreateUser(ctx context.Context, username, password string
 	user.Password = ""
 
 	err = us.uc.SetUser(ctx, user)
-	logIfErr(err)
+	logOnError(err)
 
 	return user, nil
 }
@@ -110,10 +110,10 @@ func (us *UserService) UpdateUser(ctx context.Context, user *domain.User) (*doma
 	updatedUser.Password = ""
 
 	err = us.uc.DeleteUser(ctx, user.ID)
-	logIfErr(err)
+	logOnError(err)
 
 	err = us.uc.SetUser(ctx, user)
-	logIfErr(err)
+	logOnError(err)
 
 	return updatedUser, nil
 }
@@ -129,7 +129,7 @@ func (us *UserService) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	}
 
 	err = us.uc.DeleteUser(ctx, id)
-	logIfErr(err)
+	logOnError(err)
 
 	return nil
 }

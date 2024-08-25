@@ -8,6 +8,7 @@ import (
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"github.com/tommjj/go-blog-api/internal/adapter/http/handler"
 	"github.com/tommjj/go-blog-api/internal/config"
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
@@ -24,7 +25,7 @@ type Router struct {
 	Url  string
 }
 
-func New(conf *config.Http) (*Router, error) {
+func New(conf *config.Http, authHandler *handler.AuthHandler) (*Router, error) {
 	r := gin.New()
 
 	// set logger middleware
@@ -43,6 +44,12 @@ func New(conf *config.Http) (*Router, error) {
 
 	// router
 	r.GET("/ping", ping)
+
+	//auth
+	auth := r.Group("/auth")
+	{
+		auth.POST("/login", authHandler.Login)
+	}
 
 	return &Router{
 		Engine: r,

@@ -46,7 +46,7 @@ func (bs *BlogService) GetBlogByID(ctx context.Context, id uuid.UUID) (*domain.B
 	}
 
 	err = bs.cache.SetBlog(ctx, blog)
-	logIfErr(err)
+	logOnError(err)
 
 	return blog, nil
 }
@@ -76,7 +76,7 @@ func (bs *BlogService) GetListBlogs(ctx context.Context, skip, limit int) ([]dom
 	}
 
 	err = bs.cache.SetList(ctx, skip, limit, blogs)
-	logIfErr(err)
+	logOnError(err)
 
 	return blogs, nil
 }
@@ -106,7 +106,7 @@ func (bs *BlogService) SearchBlogsByTitle(ctx context.Context, title string, ski
 	}
 
 	err = bs.cache.SetSearchList(ctx, title, skip, limit, blogs)
-	logIfErr(err)
+	logOnError(err)
 
 	return blogs, nil
 }
@@ -121,7 +121,7 @@ func (bs *BlogService) CreateBlog(ctx context.Context, blog *domain.Blog) (*doma
 	}
 
 	err = bs.cache.SetBlog(ctx, newBlog)
-	logIfErr(err)
+	logOnError(err)
 
 	return newBlog, nil
 }
@@ -156,7 +156,7 @@ func (bs *BlogService) UpdateBlog(ctx context.Context, updates *domain.Blog) (*d
 	}
 
 	err = bs.cache.SetBlog(ctx, updatedBlog)
-	logIfErr(err)
+	logOnError(err)
 	return updatedBlog, nil
 }
 
@@ -175,7 +175,7 @@ func (bs *BlogService) DeleteBlog(ctx context.Context, blogId, userId uuid.UUID)
 	}
 
 	err = bs.cache.DeleteBlog(ctx, blogId)
-	logIfErr(err)
+	logOnError(err)
 
 	return nil
 }

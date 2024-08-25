@@ -23,10 +23,7 @@ func NewAuthService(token ports.ITokenService, userRepo ports.IUserRepository) p
 func (as *AuthService) Login(ctx context.Context, username, password string) (string, error) {
 	user, err := as.repo.GetUserByName(ctx, username)
 	if err != nil {
-		if err == domain.ErrDataNotFound {
-			return "", err
-		}
-		return "", domain.ErrInternal
+		return "", domain.ErrInvalidCredentials
 	}
 
 	err = util.ComparePassword(password, user.Password)

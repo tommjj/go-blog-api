@@ -54,7 +54,7 @@ func (j *JWTService) CreateToken(user *domain.User) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.duration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "test",
+			Issuer:    "blog-api",
 		},
 	})
 

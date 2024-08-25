@@ -69,10 +69,10 @@ func getWriteSyncer(conf *config.LogFileWriter) zapcore.WriteSyncer {
 }
 
 func getJsonEncoder(mode string) zapcore.EncoderConfig {
-	if mode == "production" {
-		return zap.NewProductionEncoderConfig()
+	if mode != "production" {
+		return zap.NewDevelopmentEncoderConfig()
 	}
-	return zap.NewDevelopmentEncoderConfig()
+	return zap.NewProductionEncoderConfig()
 }
 
 func Debug(msg string, fields ...zapcore.Field) {
