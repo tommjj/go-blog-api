@@ -3,9 +3,11 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/tommjj/go-blog-api/internal/core/domain"
 )
 
@@ -15,7 +17,7 @@ type response struct {
 	Data    any    `json:"data,omitempty"`
 }
 
-// newResponse is a helper function to create a response body
+// newResponse create a response body
 func newResponse(success bool, message string, data any) response {
 	return response{
 		Success: success,
@@ -24,7 +26,7 @@ func newResponse(success bool, message string, data any) response {
 	}
 }
 
-// Auth res
+// authResponse type to auth response for auth handler
 type authResponse struct {
 	Token string `json:"token" example:"eyJJ9.eyJpEzNDR9.fUjDw0"`
 }
@@ -33,6 +35,24 @@ type authResponse struct {
 func newAuthResponse(token string) authResponse {
 	return authResponse{
 		Token: token,
+	}
+}
+
+// userResponse type to user response for user handler
+type userResponse struct {
+	ID        uuid.UUID `json:"id" example:"39833b12-a044-46f5-8abd-47c47345d458"`
+	Username  string    `json:"username" example:"laplala"`
+	UpdatedAt time.Time `json:"updated_at" example:"1970-01-01T00:00:00Z"`
+	CreatedAt time.Time `json:"created_at" example:"1970-01-01T00:00:00Z"`
+}
+
+// newUserResponse create user response for user handler
+func newUserResponse(user *domain.User) userResponse {
+	return userResponse{
+		ID:        user.ID,
+		Username:  user.Name,
+		UpdatedAt: user.UpdatedAt,
+		CreatedAt: user.CreatedAt,
 	}
 }
 
@@ -70,7 +90,7 @@ func handleError(ctx *gin.Context, err error) {
 	ctx.JSON(statusCode, res)
 }
 
-// errorResponse
+// errorResponse type of error response
 type errorResponse struct {
 	Success  bool     `json:"success" example:"true"`
 	Messages []string `json:"messages" example:"Success"`

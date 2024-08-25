@@ -16,15 +16,15 @@ var (
 	searchListBlogsPrefix = "searchBlogs"
 )
 
-type BlogCacheService struct {
+type blogCache struct {
 	cache          ports.ICacheRepository
 	blogDuration   time.Duration
 	listDuration   time.Duration
 	searchDuration time.Duration
 }
 
-func NewBlogCacheService(cache ports.ICacheRepository, blogDuration time.Duration, listDuration time.Duration, searchDuration time.Duration) ports.IBlogCacheService {
-	return &BlogCacheService{
+func NewBlogCache(cache ports.ICacheRepository, blogDuration time.Duration, listDuration time.Duration, searchDuration time.Duration) ports.IBlogCacheService {
+	return &blogCache{
 		cache:          cache,
 		blogDuration:   blogDuration,
 		listDuration:   listDuration,
@@ -32,7 +32,7 @@ func NewBlogCacheService(cache ports.ICacheRepository, blogDuration time.Duratio
 	}
 }
 
-func (bcs *BlogCacheService) SetBlog(ctx context.Context, blog *domain.Blog) error {
+func (bcs *blogCache) SetBlog(ctx context.Context, blog *domain.Blog) error {
 	bytes, err := marshal(blog)
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (bcs *BlogCacheService) SetBlog(ctx context.Context, blog *domain.Blog) err
 	return bcs.cache.Set(ctx, generateCacheKeyParams(blogPrefix, blog.ID), bytes, bcs.blogDuration)
 }
 
-func (bcs *BlogCacheService) SetList(ctx context.Context, skip int, limit int, list []domain.Blog) error {
+func (bcs *blogCache) SetList(ctx context.Context, skip int, limit int, list []domain.Blog) error {
 	bytes, err := marshal(list)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (bcs *BlogCacheService) SetList(ctx context.Context, skip int, limit int, l
 	return bcs.cache.Set(ctx, generateCacheKeyParams(listBlogsPrefix, skip, limit), bytes, bcs.listDuration)
 }
 
-func (bcs *BlogCacheService) SetSearchList(ctx context.Context, search string, skip int, limit int, list []domain.Blog) error {
+func (bcs *blogCache) SetSearchList(ctx context.Context, search string, skip int, limit int, list []domain.Blog) error {
 	bytes, err := marshal(list)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (bcs *BlogCacheService) SetSearchList(ctx context.Context, search string, s
 	return bcs.cache.Set(ctx, generateCacheKeyParams(searchListBlogsPrefix, search, skip, limit), bytes, bcs.searchDuration)
 }
 
-func (bcs *BlogCacheService) GetBlog(ctx context.Context, id uuid.UUID) (*domain.Blog, error) {
+func (bcs *blogCache) GetBlog(ctx context.Context, id uuid.UUID) (*domain.Blog, error) {
 	bytes, err := bcs.cache.Get(ctx, generateCacheKeyParams(blogPrefix, id))
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (bcs *BlogCacheService) GetBlog(ctx context.Context, id uuid.UUID) (*domain
 	return blog, nil
 }
 
-func (bcs *BlogCacheService) GetList(ctx context.Context, skip int, limit int) ([]domain.Blog, error) {
+func (bcs *blogCache) GetList(ctx context.Context, skip int, limit int) ([]domain.Blog, error) {
 	bytes, err := bcs.cache.Get(ctx, generateCacheKeyParams(listBlogsPrefix, skip, limit))
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (bcs *BlogCacheService) GetList(ctx context.Context, skip int, limit int) (
 	return list, nil
 }
 
-func (bcs *BlogCacheService) GetSearchList(ctx context.Context, search string, skip int, limit int) ([]domain.Blog, error) {
+func (bcs *blogCache) GetSearchList(ctx context.Context, search string, skip int, limit int) ([]domain.Blog, error) {
 	bytes, err := bcs.cache.Get(ctx, generateCacheKeyParams(searchListBlogsPrefix, search, skip, limit))
 	if err != nil {
 		return nil, err
@@ -101,30 +101,30 @@ func (bcs *BlogCacheService) GetSearchList(ctx context.Context, search string, s
 	return list, nil
 }
 
-func (bcs *BlogCacheService) DeleteBlog(ctx context.Context, id uuid.UUID) error {
+func (bcs *blogCache) DeleteBlog(ctx context.Context, id uuid.UUID) error {
 	return bcs.cache.Delete(ctx, generateCacheKeyParams(blogPrefix, id))
 }
 
-func (bcs *BlogCacheService) DeleteList(ctx context.Context, skip int, limit int) error {
+func (bcs *blogCache) DeleteList(ctx context.Context, skip int, limit int) error {
 	return bcs.cache.Delete(ctx, generateCacheKeyParams(listBlogsPrefix, skip, limit))
 }
 
-func (bcs *BlogCacheService) DeleteSearchList(ctx context.Context, search string, skip int, limit int) error {
+func (bcs *blogCache) DeleteSearchList(ctx context.Context, search string, skip int, limit int) error {
 	return bcs.cache.Delete(ctx, generateCacheKeyParams(searchListBlogsPrefix, search, skip, limit))
 }
 
-func (bcs *BlogCacheService) DeleteSearchLists(ctx context.Context, search string) error {
+func (bcs *blogCache) DeleteSearchLists(ctx context.Context, search string) error {
 	return bcs.cache.DeleteByPrefix(ctx, fmt.Sprintf("%v-%v*", searchListBlogsPrefix, search))
 }
 
-func (bcs *BlogCacheService) DeleteAllList(ctx context.Context) error {
+func (bcs *blogCache) DeleteAllList(ctx context.Context) error {
 	return bcs.cache.DeleteByPrefix(ctx, fmt.Sprintf("%v-*", listBlogsPrefix))
 }
 
-func (bcs *BlogCacheService) DeleteAllSearchList(ctx context.Context) error {
+func (bcs *blogCache) DeleteAllSearchList(ctx context.Context) error {
 	return bcs.cache.DeleteByPrefix(ctx, fmt.Sprintf("%v-*", searchListBlogsPrefix))
 }
 
-func (bcs *BlogCacheService) DeleteAllBlogs(ctx context.Context) error {
+func (bcs *blogCache) DeleteAllBlogs(ctx context.Context) error {
 	return bcs.cache.DeleteByPrefix(ctx, fmt.Sprintf("%v-*", blogPrefix))
 }

@@ -44,18 +44,23 @@ func main() {
 	userRepo := repository.NewUserRepository(db)
 
 	// cache
-	_ = cache.NewUserCacheService(redis, time.Hour)
+	userCache := cache.NewUserCache(redis, time.Hour)
 
 	// auth
 	tokenService, err := auth.NewJWTTokenService(*config.Auth)
 	fatalOnError(err)
-
 	authService := service.NewAuthService(tokenService, userRepo)
 	authHandler := handler.NewAuthHandler(authService)
 
-	r, err := http.New(config.Http, authHandler)
+	// user handler
+	userService := service.NewUserService(userRepo, userCache)
+	userHandler := handler.NewUserHandler(userService)
+
+	r, err := http.New(config.Http,
+		http.RegisterAuthRoute(authHandler),
+		http.RegisterUserRoute(tokenService, userHandler),
+	)
 	fatalOnError(err)
 
 	r.Serve()
-	logger.Info("setup done!")
 }

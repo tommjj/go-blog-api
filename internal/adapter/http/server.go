@@ -8,7 +8,6 @@ import (
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
-	"github.com/tommjj/go-blog-api/internal/adapter/http/handler"
 	"github.com/tommjj/go-blog-api/internal/config"
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
@@ -19,13 +18,17 @@ func ping(c *gin.Context) {
 	})
 }
 
+type RegisterRouterFunc func(gin.IRouter)
+
 type Router struct {
 	*gin.Engine
 	Port int
 	Url  string
 }
 
-func New(conf *config.Http, authHandler *handler.AuthHandler) (*Router, error) {
+func New(conf *config.Http, options ...RegisterRouterFunc) (*Router, error) {
+	// gin.SetMode(gin.ReleaseMode)
+
 	r := gin.New()
 
 	// set logger middleware
@@ -45,10 +48,9 @@ func New(conf *config.Http, authHandler *handler.AuthHandler) (*Router, error) {
 	// router
 	r.GET("/ping", ping)
 
-	//auth
-	auth := r.Group("/auth")
-	{
-		auth.POST("/login", authHandler.Login)
+	v1 := r.Group("/v1")
+	for _, option := range options {
+		option(v1)
 	}
 
 	return &Router{
