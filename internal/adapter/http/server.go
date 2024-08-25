@@ -27,7 +27,9 @@ type Router struct {
 }
 
 func New(conf *config.Http, options ...RegisterRouterFunc) (*Router, error) {
-	// gin.SetMode(gin.ReleaseMode)
+	if conf.Env == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	r := gin.New()
 
@@ -40,17 +42,16 @@ func New(conf *config.Http, options ...RegisterRouterFunc) (*Router, error) {
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 	r.Use(ginzap.RecoveryWithZap(logger, true))
 
-	// CORS
+	// set CORS
 	ginConfig := cors.DefaultConfig()
 	ginConfig.AllowOrigins = conf.AllowedOrigins
 	r.Use(cors.New(ginConfig))
 
-	// router
+	// set router
 	r.GET("/ping", ping)
 
-	v1 := r.Group("/v1")
 	for _, option := range options {
-		option(v1)
+		option(r)
 	}
 
 	return &Router{

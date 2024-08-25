@@ -6,12 +6,12 @@ import (
 )
 
 type AuthHandler struct {
-	as ports.IAuthService
+	svc ports.IAuthService
 }
 
 func NewAuthHandler(authService ports.IAuthService) *AuthHandler {
 	return &AuthHandler{
-		as: authService,
+		svc: authService,
 	}
 }
 
@@ -29,7 +29,7 @@ func (auth AuthHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := auth.as.Login(ctx, req.Username, req.Password)
+	token, err := auth.svc.Login(ctx, req.Username, req.Password)
 	if err != nil {
 		handleError(ctx, err)
 		return

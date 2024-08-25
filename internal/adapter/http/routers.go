@@ -6,6 +6,16 @@ import (
 	"github.com/tommjj/go-blog-api/internal/core/ports"
 )
 
+// Group is a option function to group register router functions
+func Group(path string, registerRouterFuncs ...RegisterRouterFunc) RegisterRouterFunc {
+	return func(e gin.IRouter) {
+		r := e.Group(path)
+		for _, fn := range registerRouterFuncs {
+			fn(r)
+		}
+	}
+}
+
 // RegisterAuthRoute is a option function to return register auth router function
 func RegisterAuthRoute(authHandler *handler.AuthHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {

@@ -8,12 +8,12 @@ import (
 )
 
 type UserHandler struct {
-	us ports.IUserService
+	svc ports.IUserService
 }
 
 func NewUserHandler(userService ports.IUserService) *UserHandler {
 	return &UserHandler{
-		us: userService,
+		svc: userService,
 	}
 }
 
@@ -30,7 +30,7 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	createdUser, err := uh.us.CreateUser(ctx, req.Username, req.Password)
+	createdUser, err := uh.svc.CreateUser(ctx, req.Username, req.Password)
 	if err != nil {
 		handleError(ctx, err)
 		return
@@ -49,7 +49,7 @@ func (uh *UserHandler) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := uh.us.GetUserByID(ctx, id)
+	user, err := uh.svc.GetUserByID(ctx, id)
 	if err != nil {
 		handleError(ctx, err)
 		return
@@ -93,7 +93,7 @@ func (uh *UserHandler) UpdateUser(ctx *gin.Context) {
 		Password: req.Password,
 	}
 
-	updatedUser, err := uh.us.UpdateUser(ctx, updateData)
+	updatedUser, err := uh.svc.UpdateUser(ctx, updateData)
 	if err != nil {
 		handleError(ctx, err)
 		return
@@ -118,7 +118,7 @@ func (uh *UserHandler) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	err = uh.us.DeleteUser(ctx, id)
+	err = uh.svc.DeleteUser(ctx, id)
 	if err != nil {
 		handleError(ctx, err)
 		return

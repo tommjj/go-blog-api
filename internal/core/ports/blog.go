@@ -54,6 +54,8 @@ type IBlogCacheService interface {
 }
 
 type IBlogService interface {
+	// Authorized check if user owns blog
+	Authorized(ctx context.Context, userId, blogId uuid.UUID) error
 	GetBlogByID(ctx context.Context, id uuid.UUID) (*domain.Blog, error)
 	GetListBlogs(ctx context.Context, skip, limit int) ([]domain.Blog, error)
 	SearchBlogsByTitle(ctx context.Context, title string, skip, limit int) ([]domain.Blog, error)

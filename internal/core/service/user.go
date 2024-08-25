@@ -12,14 +12,14 @@ import (
 )
 
 type UserService struct {
-	ur ports.IUserRepository   // user repo
-	uc ports.IUserCacheService // user cache
+	repo  ports.IUserRepository   // user repo
+	cache ports.IUserCacheService // user cache
 }
 
 func NewUserService(userRepo ports.IUserRepository, cache ports.IUserCacheService) ports.IUserService {
 	return &UserService{
-		ur: userRepo,
-		uc: cache,
+		repo:  userRepo,
+		cache: cache,
 	}
 }
 
@@ -27,7 +27,7 @@ func (us *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*domain.U
 	var user *domain.User
 	var err error
 
-	user, err = us.uc.GetUser(ctx, id)
+	user, err = us.cache.GetUser(ctx, id)
 	if err != nil {
 		if errors.Is(err, domain.ErrDataNotFound) {
 			logger.Info(err.Error())
@@ -38,13 +38,13 @@ func (us *UserService) GetUserByID(ctx context.Context, id uuid.UUID) (*domain.U
 		return user, nil
 	}
 
-	user, err = us.ur.GetUserByID(ctx, id)
+	user, err = us.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 	user.Password = "" // remove password
 
-	err = us.uc.SetUser(ctx, user)
+	err = us.cache.SetUser(ctx, user)
 	logOnError(err)
 
 	return user, nil
@@ -56,7 +56,7 @@ func (us *UserService) CreateUser(ctx context.Context, username, password string
 		return nil, domain.ErrInternal
 	}
 
-	user, err := us.ur.CreateUser(ctx, &domain.User{
+	user, err := us.repo.CreateUser(ctx, &domain.User{
 		Name:     username,
 		Password: hashPass,
 	})
@@ -68,7 +68,7 @@ func (us *UserService) CreateUser(ctx context.Context, username, password string
 	}
 	user.Password = ""
 
-	err = us.uc.SetUser(ctx, user)
+	err = us.cache.SetUser(ctx, user)
 	logOnError(err)
 
 	return user, nil
@@ -96,7 +96,7 @@ func (us *UserService) UpdateUser(ctx context.Context, user *domain.User) (*doma
 		}
 	}
 
-	updatedUser, err := us.ur.UpdateUser(ctx, &domain.User{
+	updatedUser, err := us.repo.UpdateUser(ctx, &domain.User{
 		ID:       user.ID,
 		Name:     user.Name,
 		Password: hashPass,
@@ -109,17 +109,17 @@ func (us *UserService) UpdateUser(ctx context.Context, user *domain.User) (*doma
 	}
 	updatedUser.Password = ""
 
-	err = us.uc.DeleteUser(ctx, user.ID)
+	err = us.cache.DeleteUser(ctx, user.ID)
 	logOnError(err)
 
-	err = us.uc.SetUser(ctx, user)
+	err = us.cache.SetUser(ctx, user)
 	logOnError(err)
 
 	return updatedUser, nil
 }
 
 func (us *UserService) DeleteUser(ctx context.Context, id uuid.UUID) error {
-	err := us.ur.DeleteUser(ctx, id)
+	err := us.repo.DeleteUser(ctx, id)
 
 	if err != nil {
 		if err == domain.ErrNoUpdatedData {
@@ -128,7 +128,7 @@ func (us *UserService) DeleteUser(ctx context.Context, id uuid.UUID) error {
 		return domain.ErrInternal
 	}
 
-	err = us.uc.DeleteUser(ctx, id)
+	err = us.cache.DeleteUser(ctx, id)
 	logOnError(err)
 
 	return nil

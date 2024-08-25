@@ -47,6 +47,7 @@ type (
 	}
 
 	Http struct {
+		Env            string
 		AllowedOrigins []string
 		URL            string
 		Port           int
@@ -183,6 +184,7 @@ func GetHTTPConf() (*Http, error) {
 	}
 
 	return &Http{
+		Env:            os.Getenv("APP_ENV"),
 		AllowedOrigins: allowedOrigins,
 		URL:            os.Getenv("HTTP_URL"),
 		Port:           port,

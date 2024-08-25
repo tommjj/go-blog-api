@@ -57,8 +57,10 @@ func main() {
 	userHandler := handler.NewUserHandler(userService)
 
 	r, err := http.New(config.Http,
-		http.RegisterAuthRoute(authHandler),
-		http.RegisterUserRoute(tokenService, userHandler),
+		http.Group("/v1",
+			http.RegisterAuthRoute(authHandler),
+			http.RegisterUserRoute(tokenService, userHandler),
+		),
 	)
 	fatalOnError(err)
 

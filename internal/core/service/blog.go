@@ -126,7 +126,7 @@ func (bs *BlogService) CreateBlog(ctx context.Context, blog *domain.Blog) (*doma
 	return newBlog, nil
 }
 
-func (bs *BlogService) isAuthorized(ctx context.Context, blogId, userId uuid.UUID) error {
+func (bs *BlogService) Authorized(ctx context.Context, userId, blogId uuid.UUID) error {
 	blog, err := bs.GetBlogByID(ctx, blogId)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -136,17 +136,12 @@ func (bs *BlogService) isAuthorized(ctx context.Context, blogId, userId uuid.UUI
 	}
 
 	if blog.AuthorID != userId {
-		return domain.ErrUnauthorized
+		return domain.ErrForbidden
 	}
 	return nil
 }
 
 func (bs *BlogService) UpdateBlog(ctx context.Context, updates *domain.Blog) (*domain.Blog, error) {
-	err := bs.isAuthorized(ctx, updates.ID, updates.AuthorID)
-	if err != nil {
-		return nil, err
-	}
-
 	updatedBlog, err := bs.repo.UpdateBlog(ctx, updates)
 	if err != nil {
 		if err == domain.ErrNoUpdatedData {
@@ -161,12 +156,7 @@ func (bs *BlogService) UpdateBlog(ctx context.Context, updates *domain.Blog) (*d
 }
 
 func (bs *BlogService) DeleteBlog(ctx context.Context, blogId, userId uuid.UUID) error {
-	err := bs.isAuthorized(ctx, blogId, userId)
-	if err != nil {
-		return err
-	}
-
-	err = bs.repo.DeleteBlog(ctx, blogId)
+	err := bs.repo.DeleteBlog(ctx, blogId)
 	if err != nil {
 		if err == domain.ErrNoUpdatedData {
 			return err
