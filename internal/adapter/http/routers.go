@@ -19,7 +19,7 @@ func Group(path string, registerRouterFuncs ...RegisterRouterFunc) RegisterRoute
 // RegisterAuthRoute is a option function to return register auth router function
 func RegisterAuthRoute(authHandler *handler.AuthHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/auth")
+		r := e.Group("/api/auth")
 		{
 			r.POST("/login", authHandler.Login)
 		}
@@ -29,7 +29,7 @@ func RegisterAuthRoute(authHandler *handler.AuthHandler) RegisterRouterFunc {
 // RegisterUserRoute is a option function to return register user router function
 func RegisterUserRoute(token ports.ITokenService, authHandler *handler.UserHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/users")
+		r := e.Group("/api/users")
 		{
 			r.GET("/:id", authHandler.GetUser)
 			r.POST("/", authHandler.CreateUser)
@@ -46,7 +46,7 @@ func RegisterUserRoute(token ports.ITokenService, authHandler *handler.UserHandl
 // RegisterBlogRoute is a option function to return register blog router function
 func RegisterBlogRoute(token ports.ITokenService, blogHandler *handler.BlogHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/blogs")
+		r := e.Group("/api/blogs")
 		{
 			r.GET("/", blogHandler.GetListBlogs)
 			r.GET("/:id", blogHandler.GetBlogByID)

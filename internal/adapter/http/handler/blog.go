@@ -70,7 +70,7 @@ func (bh *BlogHandler) GetListBlogs(ctx *gin.Context) {
 		res = append(res, newBlogResponse(&blog))
 	}
 
-	meta := newMeta(len(res), req.Skip, req.Limit)
+	meta := newMeta(len(res), req.Limit, req.Skip)
 
 	handleSuccess(ctx, responseWithMeta(meta, "blogs", res))
 }
