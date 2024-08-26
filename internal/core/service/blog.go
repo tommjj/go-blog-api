@@ -11,10 +11,10 @@ import (
 
 type BlogService struct {
 	repo  ports.IBlogRepository
-	cache ports.IBlogCacheService
+	cache ports.IBlogCache
 }
 
-func NewBlogService(blogRepository ports.IBlogRepository, cache ports.IBlogCacheService) ports.IBlogService {
+func NewBlogService(blogRepository ports.IBlogRepository, cache ports.IBlogCache) ports.IBlogService {
 	return &BlogService{
 		repo:  blogRepository,
 		cache: cache,
@@ -155,8 +155,8 @@ func (bs *BlogService) UpdateBlog(ctx context.Context, updates *domain.Blog) (*d
 	return updatedBlog, nil
 }
 
-func (bs *BlogService) DeleteBlog(ctx context.Context, blogId, userId uuid.UUID) error {
-	err := bs.repo.DeleteBlog(ctx, blogId)
+func (bs *BlogService) DeleteBlog(ctx context.Context, id uuid.UUID) error {
+	err := bs.repo.DeleteBlog(ctx, id)
 	if err != nil {
 		if err == domain.ErrNoUpdatedData {
 			return err
@@ -164,7 +164,7 @@ func (bs *BlogService) DeleteBlog(ctx context.Context, blogId, userId uuid.UUID)
 		return domain.ErrInternal
 	}
 
-	err = bs.cache.DeleteBlog(ctx, blogId)
+	err = bs.cache.DeleteBlog(ctx, id)
 	logOnError(err)
 
 	return nil

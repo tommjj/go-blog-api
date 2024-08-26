@@ -42,24 +42,34 @@ func main() {
 
 	// repository
 	userRepo := repository.NewUserRepository(db)
+	blogRepo := repository.NewBlogRepository(db)
 
 	// cache
 	userCache := cache.NewUserCache(redis, time.Hour)
+	blogCache := cache.NewBlogCache(redis, time.Hour, time.Minute*2, time.Minute*2)
 
-	// auth
+	// service
 	tokenService, err := auth.NewJWTTokenService(*config.Auth)
 	fatalOnError(err)
+
 	authService := service.NewAuthService(tokenService, userRepo)
+	userService := service.NewUserService(userRepo, userCache)
+	blogService := service.NewBlogService(blogRepo, blogCache)
+
+	// auth handler
 	authHandler := handler.NewAuthHandler(authService)
 
 	// user handler
-	userService := service.NewUserService(userRepo, userCache)
 	userHandler := handler.NewUserHandler(userService)
+
+	// blog handler
+	BlogHandler := handler.NewBlogHandler(blogService)
 
 	r, err := http.New(config.Http,
 		http.Group("/v1",
 			http.RegisterAuthRoute(authHandler),
 			http.RegisterUserRoute(tokenService, userHandler),
+			http.RegisterBlogRoute(tokenService, BlogHandler),
 		),
 	)
 	fatalOnError(err)

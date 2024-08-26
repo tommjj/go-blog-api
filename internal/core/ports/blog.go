@@ -24,7 +24,7 @@ type IBlogRepository interface {
 	DeleteBlog(ctx context.Context, id uuid.UUID) error
 }
 
-type IBlogCacheService interface {
+type IBlogCache interface {
 	// SetBlog
 	SetBlog(ctx context.Context, blog *domain.Blog) error
 	// SetList
@@ -61,5 +61,5 @@ type IBlogService interface {
 	SearchBlogsByTitle(ctx context.Context, title string, skip, limit int) ([]domain.Blog, error)
 	CreateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
 	UpdateBlog(ctx context.Context, blog *domain.Blog) (*domain.Blog, error)
-	DeleteBlog(ctx context.Context, blogId, userId uuid.UUID) error
+	DeleteBlog(ctx context.Context, id uuid.UUID) error
 }

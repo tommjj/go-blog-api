@@ -22,7 +22,7 @@ type IUserRepository interface {
 	DeleteUser(ctx context.Context, id uuid.UUID) error
 }
 
-type IUserCacheService interface {
+type IUserCache interface {
 	// SetUser set an new user to cache
 	SetUser(ctx context.Context, user *domain.User) error
 	// GetUser get a user in cache by user id

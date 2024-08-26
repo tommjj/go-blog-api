@@ -12,11 +12,11 @@ import (
 )
 
 type UserService struct {
-	repo  ports.IUserRepository   // user repo
-	cache ports.IUserCacheService // user cache
+	repo  ports.IUserRepository // user repo
+	cache ports.IUserCache      // user cache
 }
 
-func NewUserService(userRepo ports.IUserRepository, cache ports.IUserCacheService) ports.IUserService {
+func NewUserService(userRepo ports.IUserRepository, cache ports.IUserCache) ports.IUserService {
 	return &UserService{
 		repo:  userRepo,
 		cache: cache,

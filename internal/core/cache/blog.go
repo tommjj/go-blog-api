@@ -23,7 +23,7 @@ type blogCache struct {
 	searchDuration time.Duration
 }
 
-func NewBlogCache(cache ports.ICacheRepository, blogDuration time.Duration, listDuration time.Duration, searchDuration time.Duration) ports.IBlogCacheService {
+func NewBlogCache(cache ports.ICacheRepository, blogDuration time.Duration, listDuration time.Duration, searchDuration time.Duration) ports.IBlogCache {
 	return &blogCache{
 		cache:          cache,
 		blogDuration:   blogDuration,

@@ -20,7 +20,7 @@ type userCache struct {
 	duration time.Duration          // cache storage time
 }
 
-func NewUserCache(cache ports.ICacheRepository, duration time.Duration) ports.IUserCacheService {
+func NewUserCache(cache ports.ICacheRepository, duration time.Duration) ports.IUserCache {
 	return &userCache{
 		cache,
 		duration,

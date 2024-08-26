@@ -26,6 +26,22 @@ func newResponse(success bool, message string, data any) response {
 	}
 }
 
+// meta represents metadata for a paginated response
+type meta struct {
+	Total int `json:"total" example:"100"`
+	Limit int `json:"limit" example:"10"`
+	Skip  int `json:"skip" example:"0"`
+}
+
+// newMeta is a helper function to create metadata for a paginated response
+func newMeta(total, limit, skip int) meta {
+	return meta{
+		Total: total,
+		Limit: limit,
+		Skip:  skip,
+	}
+}
+
 // authResponse type to auth response for auth handler
 type authResponse struct {
 	Token string `json:"token" example:"eyJJ9.eyJpEzNDR9.fUjDw0"`
@@ -53,6 +69,28 @@ func newUserResponse(user *domain.User) userResponse {
 		Username:  user.Name,
 		UpdatedAt: user.UpdatedAt,
 		CreatedAt: user.CreatedAt,
+	}
+}
+
+// blogResponse type to blog response for blog handler
+type blogResponse struct {
+	ID        uuid.UUID `json:"id" example:"39833b12-a044-46f5-8abd-47c47345d458"`
+	Title     string    `json:"title" example:"how to ..."`
+	Text      string    `json:"text,omitempty" example:"to do ..."`
+	AuthorID  uuid.UUID `json:"author_id"`
+	UpdatedAt time.Time `json:"updated_at" example:"1970-01-01T00:00:00Z"`
+	CreatedAt time.Time `json:"created_at" example:"1970-01-01T00:00:00Z"`
+}
+
+// newBlogResponse create blog response for blog handler
+func newBlogResponse(blog *domain.Blog) blogResponse {
+	return blogResponse{
+		ID:        blog.ID,
+		Title:     blog.Title,
+		Text:      blog.Text,
+		AuthorID:  blog.AuthorID,
+		UpdatedAt: blog.UpdatedAt,
+		CreatedAt: blog.CreatedAt,
 	}
 }
 
