@@ -239,6 +239,16 @@
                     "blogs"
                 ],
                 "summary": "get blog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Blog data",
@@ -296,6 +306,14 @@
                 ],
                 "summary": "update blog",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Update blog request body",
                         "name": "request",
@@ -374,6 +392,16 @@
                     "blogs"
                 ],
                 "summary": "delete blog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Blog updated",
@@ -491,6 +519,16 @@
                     "users"
                 ],
                 "summary": "get user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User data",
@@ -548,6 +586,14 @@
                 ],
                 "summary": "update user",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Update User request body",
                         "name": "request",
@@ -626,6 +672,16 @@
                     "users"
                 ],
                 "summary": "delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User deleted",
@@ -744,12 +800,12 @@
                         "type": "string"
                     },
                     "example": [
-                        "Success"
+                        "data not found"
                     ]
                 },
                 "success": {
                     "type": "boolean",
-                    "example": true
+                    "example": false
                 }
             }
         },

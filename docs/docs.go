@@ -242,6 +242,16 @@ const docTemplate = `{
                     "blogs"
                 ],
                 "summary": "get blog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Blog data",
@@ -299,6 +309,14 @@ const docTemplate = `{
                 ],
                 "summary": "update blog",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Update blog request body",
                         "name": "request",
@@ -377,6 +395,16 @@ const docTemplate = `{
                     "blogs"
                 ],
                 "summary": "delete blog",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Blog id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Blog updated",
@@ -494,6 +522,16 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "get user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User data",
@@ -551,6 +589,14 @@ const docTemplate = `{
                 ],
                 "summary": "update user",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Update User request body",
                         "name": "request",
@@ -629,6 +675,16 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "User deleted",
@@ -747,12 +803,12 @@ const docTemplate = `{
                         "type": "string"
                     },
                     "example": [
-                        "Success"
+                        "data not found"
                     ]
                 },
                 "success": {
                     "type": "boolean",
-                    "example": true
+                    "example": false
                 }
             }
         },

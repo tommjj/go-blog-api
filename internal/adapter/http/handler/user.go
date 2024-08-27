@@ -60,7 +60,7 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		uuid						true	"User id"
+//	@Param			id	path		string						true	"User id" format(uuid)
 //	@Success		200	{object}	response{data=userResponse}	"User data"
 //	@Failure		400	{object}	errorResponse				"Validation error"
 //	@Failure		404	{object}	errorResponse				"Data not found error"
@@ -97,7 +97,7 @@ type updateUserRequest struct {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path		uuid						true	"User id"
+//	@Param			id		path		string						true	"User id" format(uuid)
 //	@Param			request	body		updateUserRequest			true	"Update User request body"
 //	@Success		200		{object}	response{data=userResponse}	"User updated"
 //	@Failure		400		{object}	errorResponse				"Validation error"
@@ -153,7 +153,7 @@ func (uh *UserHandler) UpdateUser(ctx *gin.Context) {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		uuid			true	"User id"
+//	@Param			id	path		string			true	"User id" format(uuid)
 //	@Success		200	{object}	response		"User deleted"
 //	@Failure		400	{object}	errorResponse	"Validation error"
 //	@Failure		401	{object}	errorResponse	"Unauthorized error"

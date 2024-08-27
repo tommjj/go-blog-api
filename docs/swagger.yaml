@@ -56,12 +56,12 @@ definitions:
     properties:
       messages:
         example:
-        - Success
+        - data not found
         items:
           type: string
         type: array
       success:
-        example: true
+        example: false
         type: boolean
     type: object
   handler.listBlogsResponse:
@@ -294,6 +294,13 @@ paths:
       consumes:
       - application/json
       description: delete a blog
+      parameters:
+      - description: Blog id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -330,6 +337,13 @@ paths:
       consumes:
       - application/json
       description: get blog by blog id
+      parameters:
+      - description: blog id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -362,6 +376,12 @@ paths:
       - application/json
       description: update a blog data
       parameters:
+      - description: Blog id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Update blog request body
         in: body
         name: request
@@ -449,6 +469,13 @@ paths:
       consumes:
       - application/json
       description: delete user by user id
+      parameters:
+      - description: User id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -481,6 +508,13 @@ paths:
       consumes:
       - application/json
       description: get a user by user id
+      parameters:
+      - description: User id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -513,6 +547,12 @@ paths:
       - application/json
       description: update user data
       parameters:
+      - description: User id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Update User request body
         in: body
         name: request

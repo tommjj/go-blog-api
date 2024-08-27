@@ -144,8 +144,8 @@ func handleError(ctx *gin.Context, err error) {
 
 // errorResponse type of error response
 type errorResponse struct {
-	Success  bool     `json:"success" example:"true"`
-	Messages []string `json:"messages" example:"Success"`
+	Success  bool     `json:"success" example:"false"`
+	Messages []string `json:"messages" example:"data not found"`
 }
 
 // newErrorResponse create an new error response

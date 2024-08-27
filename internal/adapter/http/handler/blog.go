@@ -26,7 +26,7 @@ func NewBlogHandler(blogService ports.IBlogService) *BlogHandler {
 //	@Tags			blogs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		uuid						true	"blog id"
+//	@Param			id	path		string						true	"blog id"	format(uuid)
 //	@Success		200	{object}	response{data=blogResponse}	"Blog data"
 //	@Failure		400	{object}	errorResponse				"Validation error"
 //	@Failure		404	{object}	errorResponse				"Data not found error"
@@ -159,7 +159,7 @@ type putBlogRequest struct {
 //	@Tags			blogs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path		uuid						true	"Blog id"
+//	@Param			id		path		string						true	"Blog id"	format(uuid)
 //	@Param			request	body		putBlogRequest				true	"Update blog request body"
 //	@Success		200		{object}	response{data=blogResponse}	"Blog updated"
 //	@Failure		400		{object}	errorResponse				"Validation error"
@@ -214,7 +214,7 @@ func (bh *BlogHandler) UpdateBlog(ctx *gin.Context) {
 //	@Tags			blogs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		uuid			true	"Blog id"
+//	@Param			id	path		string			true	"Blog id"	format(uuid)
 //	@Success		200	{object}	response		"Blog updated"
 //	@Failure		400	{object}	errorResponse	"Validation error"
 //	@Failure		401	{object}	errorResponse	"Unauthorized error"
