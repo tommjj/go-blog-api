@@ -94,6 +94,20 @@ func newBlogResponse(blog *domain.Blog) blogResponse {
 	}
 }
 
+// listBlogsResponse type to blogs response for blog handler
+type listBlogsResponse struct {
+	Meta  meta           `json:"meta"`
+	Blogs []blogResponse `json:"blogs"`
+}
+
+// newListBlogsResponse create blogs response for blog handler
+func newListBlogsResponse(meta meta, blogs []blogResponse) listBlogsResponse {
+	return listBlogsResponse{
+		Meta:  meta,
+		Blogs: blogs,
+	}
+}
+
 // errorStatusMap is a map of defined error messages and their corresponding http status codes
 var errorStatusMap = map[error]int{
 	domain.ErrInternal:                   http.StatusInternalServerError,

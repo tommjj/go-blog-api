@@ -1,0 +1,568 @@
+basePath: /v1/api
+definitions:
+  handler.authResponse:
+    properties:
+      token:
+        example: eyJJ9.eyJpEzNDR9.fUjDw0
+        type: string
+    type: object
+  handler.blogResponse:
+    properties:
+      author_id:
+        type: string
+      created_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+      id:
+        example: 39833b12-a044-46f5-8abd-47c47345d458
+        type: string
+      text:
+        example: to do ...
+        type: string
+      title:
+        example: how to ...
+        type: string
+      updated_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+    type: object
+  handler.createBlogRequest:
+    properties:
+      text:
+        example: adaw ...
+        type: string
+      title:
+        example: adw...
+        type: string
+    required:
+    - text
+    - title
+    type: object
+  handler.createUserRequest:
+    properties:
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+      username:
+        example: laplala
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.errorResponse:
+    properties:
+      messages:
+        example:
+        - Success
+        items:
+          type: string
+        type: array
+      success:
+        example: true
+        type: boolean
+    type: object
+  handler.listBlogsResponse:
+    properties:
+      blogs:
+        items:
+          $ref: '#/definitions/handler.blogResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/handler.meta'
+    type: object
+  handler.loginRequest:
+    properties:
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+      username:
+        example: laplala
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.meta:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      skip:
+        example: 0
+        type: integer
+      total:
+        example: 100
+        type: integer
+    type: object
+  handler.putBlogRequest:
+    properties:
+      text:
+        example: adaw ...
+        type: string
+      title:
+        example: adw...
+        type: string
+    required:
+    - text
+    - title
+    type: object
+  handler.response:
+    properties:
+      data: {}
+      message:
+        example: Success
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  handler.updateUserRequest:
+    properties:
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+      username:
+        example: laplala
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.userResponse:
+    properties:
+      created_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+      id:
+        example: 39833b12-a044-46f5-8abd-47c47345d458
+        type: string
+      updated_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+      username:
+        example: laplala
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a simple RESTful blog api.
+  title: Go BLOG API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a registered user and returns an access token if the credentials
+        are valid.
+      parameters:
+      - description: Login request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully logged in
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.authResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Login and get an access token
+      tags:
+      - auth
+  /blogs:
+    get:
+      consumes:
+      - application/json
+      description: get blogs
+      parameters:
+      - description: Query
+        in: query
+        name: q
+        type: string
+      - default: 0
+        description: Skip
+        in: query
+        minimum: 0
+        name: skip
+        type: integer
+      - default: 5
+        description: Limit
+        in: query
+        minimum: 5
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Blogs data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.listBlogsResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: get blogs
+      tags:
+      - blogs
+    post:
+      consumes:
+      - application/json
+      description: create a new blog
+      parameters:
+      - description: Create blog request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createBlogRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Blog created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.blogResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: create blog
+      tags:
+      - blogs
+  /blogs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a blog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Blog updated
+          schema:
+            $ref: '#/definitions/handler.response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: delete blog
+      tags:
+      - blogs
+    get:
+      consumes:
+      - application/json
+      description: get blog by blog id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Blog data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.blogResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: get blog
+      tags:
+      - blogs
+    put:
+      consumes:
+      - application/json
+      description: update a blog data
+      parameters:
+      - description: Update blog request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.putBlogRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Blog updated
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.blogResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: update blog
+      tags:
+      - blogs
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: create an new user
+      parameters:
+      - description: Create User request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.userResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: create user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user by user id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted
+          schema:
+            $ref: '#/definitions/handler.response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: delete user
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: get a user by user id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.userResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: get user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: update user data
+      parameters:
+      - description: Update User request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.response'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.userResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: update user
+      tags:
+      - users
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and the access token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

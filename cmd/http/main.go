@@ -16,6 +16,17 @@ import (
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
 
+// @title						Go BLOG API
+// @version					1.0
+// @description				This is a simple RESTful blog api.
+//
+// @BasePath					/v1/api
+// @schemes					http https
+//
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
+// @description				Type "Bearer" followed by a space and the access token.
 func fatalOnError(err error) {
 	if err != nil {
 		logger.Fatal(err.Error())
@@ -66,7 +77,7 @@ func main() {
 	BlogHandler := handler.NewBlogHandler(blogService)
 
 	r, err := http.New(config.Http,
-		http.Group("/v1",
+		http.Group("/v1/api",
 			http.RegisterAuthRoute(authHandler),
 			http.RegisterUserRoute(tokenService, userHandler),
 			http.RegisterBlogRoute(tokenService, BlogHandler),

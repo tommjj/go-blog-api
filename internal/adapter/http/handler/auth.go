@@ -20,6 +20,19 @@ type loginRequest struct {
 	Password string `json:"password" binding:"required,min=8" example:"12345678" minLength:"8"`
 }
 
+// Login go-blog
+//
+//	@Summary		Login and get an access token
+//	@Description	Logs in a registered user and returns an access token if the credentials are valid.
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		loginRequest				true	"Login request body"
+//	@Success		200		{object}	response{data=authResponse}	"Successfully logged in"
+//	@Failure		400		{object}	errorResponse				"Validation error"
+//	@Failure		401		{object}	errorResponse				"Unauthorized error"
+//	@Failure		500		{object}	errorResponse				"Internal server error"
+//	@Router			/auth/login [post]
 func (auth AuthHandler) Login(ctx *gin.Context) {
 	var req loginRequest
 

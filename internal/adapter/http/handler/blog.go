@@ -19,7 +19,20 @@ func NewBlogHandler(blogService ports.IBlogService) *BlogHandler {
 	}
 }
 
-func (bh *BlogHandler) GetBlogByID(ctx *gin.Context) {
+// GetBlog go-blog
+//
+//	@Summary		get blog
+//	@Description	get blog by blog id
+//	@Tags			blogs
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uuid						true	"blog id"
+//	@Success		200	{object}	response{data=blogResponse}	"Blog data"
+//	@Failure		400	{object}	errorResponse				"Validation error"
+//	@Failure		404	{object}	errorResponse				"Data not found error"
+//	@Failure		500	{object}	errorResponse				"Internal server error"
+//	@Router			/blogs/{id} [get]
+func (bh *BlogHandler) GetBlog(ctx *gin.Context) {
 	paramId := ctx.Param("id")
 
 	id, err := uuid.Parse(paramId)
@@ -44,6 +57,21 @@ type getListBlogsRequest struct {
 	Limit int    `form:"limit" binding:"min=5" example:"5"`
 }
 
+// GetListBlogs go-blog
+//
+//	@Summary		get blogs
+//	@Description	get blogs
+//	@Tags			blogs
+//	@Accept			json
+//	@Produce		json
+//	@Param			q		query		string								false	"Query"
+//	@Param			skip	query		int									false	"Skip"	default(0)	minimum(0)
+//	@Param			limit	query		int									false	"Limit"	default(5)	minimum(5)
+//	@Success		200		{object}	response{data=listBlogsResponse}	"Blogs data"
+//	@Failure		400		{object}	errorResponse						"Validation error"
+//	@Failure		404		{object}	errorResponse						"Data not found error"
+//	@Failure		500		{object}	errorResponse						"Internal server error"
+//	@Router			/blogs [get]
 func (bh *BlogHandler) GetListBlogs(ctx *gin.Context) {
 	req := getListBlogsRequest{
 		Limit: 5,
@@ -72,7 +100,7 @@ func (bh *BlogHandler) GetListBlogs(ctx *gin.Context) {
 
 	meta := newMeta(len(res), req.Limit, req.Skip)
 
-	handleSuccess(ctx, responseWithMeta(meta, "blogs", res))
+	handleSuccess(ctx, newListBlogsResponse(meta, res))
 }
 
 type createBlogRequest struct {
@@ -80,6 +108,21 @@ type createBlogRequest struct {
 	Text  string `json:"text" binding:"required" example:"adaw ..."`
 }
 
+// CreateBlog go-blog
+//
+//	@Summary		create blog
+//	@Description	create a new blog
+//	@Tags			blogs
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		createBlogRequest			true	"Create blog request body"
+//	@Success		200		{object}	response{data=blogResponse}	"Blog created"
+//	@Failure		400		{object}	errorResponse				"Validation error"
+//	@Failure		401		{object}	errorResponse				"Unauthorized error"
+//	@Failure		409		{object}	errorResponse				"Data conflict error"
+//	@Failure		500		{object}	errorResponse				"Internal server error"
+//	@Router			/blogs [post]
+//	@Security		BearerAuth
 func (bh *BlogHandler) CreateBlog(ctx *gin.Context) {
 	var req createBlogRequest
 	err := ctx.BindJSON(&req)
@@ -109,6 +152,23 @@ type putBlogRequest struct {
 	Text  string `json:"text" binding:"required" example:"adaw ..."`
 }
 
+// CreateBlog go-blog
+//
+//	@Summary		update blog
+//	@Description	update a blog data
+//	@Tags			blogs
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		uuid						true	"Blog id"
+//	@Param			request	body		putBlogRequest				true	"Update blog request body"
+//	@Success		200		{object}	response{data=blogResponse}	"Blog updated"
+//	@Failure		400		{object}	errorResponse				"Validation error"
+//	@Failure		401		{object}	errorResponse				"Unauthorized error"
+//	@Failure		403		{object}	errorResponse				"Forbidden error"
+//	@Failure		409		{object}	errorResponse				"Data conflict error"
+//	@Failure		500		{object}	errorResponse				"Internal server error"
+//	@Router			/blogs/{id} [put]
+//	@Security		BearerAuth
 func (bh *BlogHandler) UpdateBlog(ctx *gin.Context) {
 	paramId := ctx.Param("id")
 
@@ -147,6 +207,22 @@ func (bh *BlogHandler) UpdateBlog(ctx *gin.Context) {
 	handleSuccess(ctx, res)
 }
 
+// DeleteBlog go-blog
+//
+//	@Summary		delete blog
+//	@Description	delete a blog
+//	@Tags			blogs
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uuid			true	"Blog id"
+//	@Success		200	{object}	response		"Blog updated"
+//	@Failure		400	{object}	errorResponse	"Validation error"
+//	@Failure		401	{object}	errorResponse	"Unauthorized error"
+//	@Failure		403	{object}	errorResponse	"Forbidden error"
+//	@Failure		409	{object}	errorResponse	"Data conflict error"
+//	@Failure		500	{object}	errorResponse	"Internal server error"
+//	@Router			/blogs/{id} [delete]
+//	@Security		BearerAuth
 func (bh *BlogHandler) DeleteBlog(ctx *gin.Context) {
 	paramId := ctx.Param("id")
 

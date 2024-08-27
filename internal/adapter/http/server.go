@@ -10,6 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tommjj/go-blog-api/internal/config"
 	"github.com/tommjj/go-blog-api/internal/logger"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	docs "github.com/tommjj/go-blog-api/docs"
 )
 
 func ping(c *gin.Context) {
@@ -53,6 +57,10 @@ func New(conf *config.Http, options ...RegisterRouterFunc) (*Router, error) {
 	for _, option := range options {
 		option(r)
 	}
+
+	// Swagger
+	docs.SwaggerInfo.BasePath = "/v1/api"
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return &Router{
 		Engine: r,

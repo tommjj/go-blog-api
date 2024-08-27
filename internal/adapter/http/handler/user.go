@@ -22,6 +22,19 @@ type createUserRequest struct {
 	Password string `json:"password" binding:"required,min=8" example:"12345678" minLength:"8"`
 }
 
+// CreateUser go-blog
+//
+//	@Summary		create user
+//	@Description	create an new user
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		createUserRequest			true	"Create User request body"
+//	@Success		200		{object}	response{data=userResponse}	"User created"
+//	@Failure		400		{object}	errorResponse				"Validation error"
+//	@Failure		409		{object}	errorResponse				"Data conflict error"
+//	@Failure		500		{object}	errorResponse				"Internal server error"
+//	@Router			/users [post]
 func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 	var req createUserRequest
 	err := ctx.BindJSON(&req)
@@ -40,6 +53,19 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 	handleSuccess(ctx, res)
 }
 
+// GetUser go-blog
+//
+//	@Summary		get user
+//	@Description	get a user by user id
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uuid						true	"User id"
+//	@Success		200	{object}	response{data=userResponse}	"User data"
+//	@Failure		400	{object}	errorResponse				"Validation error"
+//	@Failure		404	{object}	errorResponse				"Data not found error"
+//	@Failure		500	{object}	errorResponse				"Internal server error"
+//	@Router			/users/{id} [get]
 func (uh *UserHandler) GetUser(ctx *gin.Context) {
 	paramId := ctx.Param("id")
 
@@ -64,6 +90,23 @@ type updateUserRequest struct {
 	Password string `json:"password" binding:"required,min=8" example:"12345678" minLength:"8"`
 }
 
+// UpdateUser go-blog
+//
+//	@Summary		update user
+//	@Description	update user data
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		uuid						true	"User id"
+//	@Param			request	body		updateUserRequest			true	"Update User request body"
+//	@Success		200		{object}	response{data=userResponse}	"User updated"
+//	@Failure		400		{object}	errorResponse				"Validation error"
+//	@Failure		401		{object}	errorResponse				"Unauthorized error"
+//	@Failure		403		{object}	errorResponse				"Forbidden error"
+//	@Failure		409		{object}	errorResponse				"Data conflict error"
+//	@Failure		500		{object}	errorResponse				"Internal server error"
+//	@Router			/users/{id} [put]
+//	@Security		BearerAuth
 func (uh *UserHandler) UpdateUser(ctx *gin.Context) {
 	var req updateUserRequest
 
@@ -103,6 +146,21 @@ func (uh *UserHandler) UpdateUser(ctx *gin.Context) {
 	handleSuccess(ctx, res)
 }
 
+// DeleteUser go-blog
+//
+//	@Summary		delete user
+//	@Description	delete user by user id
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uuid			true	"User id"
+//	@Success		200	{object}	response		"User deleted"
+//	@Failure		400	{object}	errorResponse	"Validation error"
+//	@Failure		401	{object}	errorResponse	"Unauthorized error"
+//	@Failure		403	{object}	errorResponse	"Forbidden error"
+//	@Failure		500	{object}	errorResponse	"Internal server error"
+//	@Router			/users/{id} [delete]
+//	@Security		BearerAuth
 func (uh *UserHandler) DeleteUser(ctx *gin.Context) {
 	paramId := ctx.Param("id")
 

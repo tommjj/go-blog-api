@@ -19,7 +19,7 @@ func Group(path string, registerRouterFuncs ...RegisterRouterFunc) RegisterRoute
 // RegisterAuthRoute is a option function to return register auth router function
 func RegisterAuthRoute(authHandler *handler.AuthHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/api/auth")
+		r := e.Group("/auth")
 		{
 			r.POST("/login", authHandler.Login)
 		}
@@ -29,7 +29,7 @@ func RegisterAuthRoute(authHandler *handler.AuthHandler) RegisterRouterFunc {
 // RegisterUserRoute is a option function to return register user router function
 func RegisterUserRoute(token ports.ITokenService, authHandler *handler.UserHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/api/users")
+		r := e.Group("/users")
 		{
 			r.GET("/:id", authHandler.GetUser)
 			r.POST("/", authHandler.CreateUser)
@@ -46,10 +46,10 @@ func RegisterUserRoute(token ports.ITokenService, authHandler *handler.UserHandl
 // RegisterBlogRoute is a option function to return register blog router function
 func RegisterBlogRoute(token ports.ITokenService, blogHandler *handler.BlogHandler) RegisterRouterFunc {
 	return func(e gin.IRouter) {
-		r := e.Group("/api/blogs")
+		r := e.Group("/blogs")
 		{
 			r.GET("/", blogHandler.GetListBlogs)
-			r.GET("/:id", blogHandler.GetBlogByID)
+			r.GET("/:id", blogHandler.GetBlog)
 			auth := r.Use(handler.AuthBeerMiddleware(token))
 			{
 				auth.POST("/", blogHandler.CreateBlog)
