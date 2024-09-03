@@ -70,5 +70,10 @@ func New(conf *config.Http, options ...RegisterRouterFunc) (*Router, error) {
 }
 
 func (r *Router) Serve() {
-	r.Run(fmt.Sprintf("%v:%v", r.Url, r.Port))
+	logger.Info(fmt.Sprintf("start server at http://%v:%v", r.Url, r.Port))
+
+	err := r.Run(fmt.Sprintf("%v:%v", r.Url, r.Port))
+	if err != nil {
+		logger.Error(err.Error())
+	}
 }

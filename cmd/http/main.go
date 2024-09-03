@@ -16,23 +16,19 @@ import (
 	"github.com/tommjj/go-blog-api/internal/logger"
 )
 
-// @title						Go BLOG API
-// @version					1.0
-// @description				This is a simple RESTful blog api.
+// Go blog api
 //
-// @BasePath					/v1/api
-// @schemes					http https
+//	@title						Go BLOG API
+//	@version					1.0
+//	@description				This is a simple RESTful blog api.
 //
-// @securityDefinitions.apikey	BearerAuth
-// @in							header
-// @name						Authorization
-// @description				Type "Bearer" followed by a space and the access token.
-func fatalOnError(err error) {
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
-}
-
+//	@BasePath					/v1/api
+//	@schemes					http https
+//
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+//	@description				Type "Bearer" followed by a space and the access token.
 func main() {
 	config, err := config.New()
 	fatalOnError(err)
@@ -41,6 +37,8 @@ func main() {
 	err = logger.Set(*config.Logger)
 	fatalOnError(err)
 	defer logger.Sync()
+
+	logger.Infof("Starting the application %v %v %v", config.App.Name, "env", config.App.Env)
 
 	// database
 	db, err := sqlite.New(*config.DB)
@@ -86,4 +84,10 @@ func main() {
 	fatalOnError(err)
 
 	r.Serve()
+}
+
+func fatalOnError(err error) {
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
 }

@@ -61,9 +61,11 @@ type (
 )
 
 func New() (*Config, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return nil, err
+	if os.Getenv("APP_ENV") != "production" {
+		err := godotenv.Load()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	app := GetAppConf()

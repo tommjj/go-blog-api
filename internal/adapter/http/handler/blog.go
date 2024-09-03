@@ -93,7 +93,7 @@ func (bh *BlogHandler) GetListBlogs(ctx *gin.Context) {
 		return
 	}
 
-	var res []blogResponse
+	res := make([]blogResponse, 0, len(blogs))
 	for _, blog := range blogs {
 		res = append(res, newBlogResponse(&blog))
 	}
